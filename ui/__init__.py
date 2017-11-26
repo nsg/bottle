@@ -2,6 +2,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
 
+import ui.snap as snap
+
 class BottleWindow(Gtk.Window):
 
     start_welcome_text = ("Welcome to Bottle, this is a application "
@@ -43,6 +45,7 @@ class BottleWindow(Gtk.Window):
         vbox.pack_start(search, False, True, 0)
 
     def enter_callback(self, widget, entry):
-        print(entry.get_text())
-
+        rl = snap.find(entry.get_text())
+        for r in rl:
+            print(r.name)
 

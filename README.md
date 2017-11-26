@@ -13,3 +13,8 @@ Focus on Snaps for now, and implement support for Flatpacks later.
 [ ] Option to connect or disconnect plugs to snaps.
 [ ] List all plugs and whats connected where.
 [ ] Add option to remove snaps.
+
+# Resources
+
+* https://dashboard.snapcraft.io/docs/api/snap.html
+* https://search.apps.ubuntu.com/docs/
