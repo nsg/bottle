@@ -4,6 +4,11 @@ from gi.repository import Gtk, Gio
 
 class BottleWindow(Gtk.Window):
 
+    start_welcome_text = ("Welcome to Bottle, this is a application "
+                          "built to manage Snaps on your system with "
+                          "a focus on security and ease of use. "
+                          "To get started, type in a search query below.")
+
     def __init__(self):
         Gtk.Window.__init__(self, title="Bottle")
         self.set_border_width(10)
@@ -27,9 +32,7 @@ class BottleWindow(Gtk.Window):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.add(vbox)
 
-        search_label = Gtk.Label("Bottle is a simple application to manage "
-                                 "snaps and flatpacks on your system with "
-                                 "a focus on security and ease to use.")
+        search_label = Gtk.Label(self.start_welcome_text)
         search_label.set_line_wrap(True)
         vbox.pack_start(search_label, False, True, 20)
 
@@ -40,6 +43,6 @@ class BottleWindow(Gtk.Window):
         vbox.pack_start(search, False, True, 0)
 
     def enter_callback(self, widget, entry):
-        print("Enter!")
+        print(entry.get_text())
 
 
