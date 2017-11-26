@@ -1,5 +1,7 @@
 import subprocess
 import yaml
+import datetime
+import re
 
 # I found the APIs annoying and took the fun out of this, so
 # for now I just parse the output of the snap command... horribe?
@@ -42,8 +44,9 @@ def update_result(sr):
     i = yd.get('installed', {})
     if i:
         i = i.split()
-        sr.installed = { "version": i[0], "rev": i[1], "size": i[2] }
-    sr.refreshed = yd.get('refreshed', None)
+        sr.installed = { "version": i[0], "rev": re.sub("[^0-9]", "",i[1]), "size": i[2] }
+    sr.refreshed = yd.get('refreshed', "1970-01-01 00:00:00 +0000 GMT")
+    sr.refreshed = datetime.datetime.strptime(sr.refreshed, "%Y-%m-%d %H:%M:%S %z %Z")
     sr.channels = yd.get('channels', {})
     if sr.channels:
         d = {}
@@ -52,7 +55,7 @@ def update_result(sr):
             if i[0] == "↑":
                 sr.channels[k] = d
             else:
-                d = { "version": i[0], "rev": i[1], "size": i[2] }
+                d = { "version": i[0], "rev": re.sub("[^0-9]", "",i[1]), "size": i[2] }
                 sr.channels[k] = d
 
     return sr

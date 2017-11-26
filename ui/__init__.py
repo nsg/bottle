@@ -2,6 +2,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
 
+import datetime
+
 import ui.snap as snap
 
 class BottleWindow(Gtk.Window):
@@ -44,8 +46,37 @@ class BottleWindow(Gtk.Window):
         search.connect("activate", self.enter_callback, search)
         vbox.pack_start(search, False, True, 0)
 
+        self.liststore = Gtk.ListStore(str, str, str)
+        treeview = Gtk.TreeView(model=self.liststore)
+
+        renderer_text = Gtk.CellRendererText()
+        column_text = Gtk.TreeViewColumn("Name", renderer_text, text=0)
+        treeview.append_column(column_text)
+
+        renderer_text = Gtk.CellRendererText()
+        column_text = Gtk.TreeViewColumn("Summary", renderer_text, text=1)
+        treeview.append_column(column_text)
+
+        renderer_text = Gtk.CellRendererText()
+        column_text = Gtk.TreeViewColumn("Installed", renderer_text, text=2)
+        treeview.append_column(column_text)
+
+        vbox.pack_start(treeview, False, True, 20)
+
+    def search_result(self, rl):
+
+        self.liststore.clear()
+
+        for r in rl:
+            self.liststore.append([
+                r.name,
+                r.summary,
+                ("{} (rev {})".format(
+                    r.installed['version'],
+                    r.installed['rev']
+                    ) if r.installed else "No")
+                ])
+
     def enter_callback(self, widget, entry):
         rl = snap.find(entry.get_text())
-        for r in rl:
-            print(r.name)
-
+        self.search_result(rl)
