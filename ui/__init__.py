@@ -24,14 +24,6 @@ class BottleWindow(Gtk.Window):
         menu.add(image)
         hbox.pack_start(menu, True, True, 0)
 
-        button = Gtk.ToggleButton("Search")
-        button.connect("toggled", self.on_button_toggled, "1")
-        hbox.pack_start(button, True, True, 0)
-
-        button = Gtk.ToggleButton("Remove")
-        button.connect("toggled", self.on_button_toggled, "1")
-        hbox.pack_start(button, True, True, 0)
-
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.add(vbox)
 
@@ -46,13 +38,6 @@ class BottleWindow(Gtk.Window):
         search.set_placeholder_text("Click here and search")
         search.connect("activate", self.enter_callback, search)
         vbox.pack_start(search, False, True, 0)
-
-    def on_button_toggled(self, button, name):
-        if button.get_active():
-            state = "on"
-        else:
-            state = "off"
-        print("Button", name, "was turned", state)
 
     def enter_callback(self, widget, entry):
         print("Enter!")
