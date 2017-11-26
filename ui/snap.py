@@ -13,7 +13,6 @@ class SnapSearchResult:
     def __init__(self, name=None):
         self.name = name
         self.version = None
-        self.developer = None
         self.notes = None
         self.summary = None
         self.description = None

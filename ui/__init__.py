@@ -2,7 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
 
-import datetime
+import re
 
 import ui.snap as snap
 
@@ -46,19 +46,23 @@ class BottleWindow(Gtk.Window):
         search.connect("activate", self.enter_callback, search)
         vbox.pack_start(search, False, True, 0)
 
-        self.liststore = Gtk.ListStore(str, str, str)
+        self.liststore = Gtk.ListStore(str, str, str, str)
         treeview = Gtk.TreeView(model=self.liststore)
 
-        renderer_text = Gtk.CellRendererText()
-        column_text = Gtk.TreeViewColumn("Name", renderer_text, text=0)
+        renderer_text = Gtk.CellRendererPixbuf()
+        column_text = Gtk.TreeViewColumn("-", renderer_text, icon_name=0)
         treeview.append_column(column_text)
 
         renderer_text = Gtk.CellRendererText()
-        column_text = Gtk.TreeViewColumn("Summary", renderer_text, text=1)
+        column_text = Gtk.TreeViewColumn("Name", renderer_text, text=1)
         treeview.append_column(column_text)
 
         renderer_text = Gtk.CellRendererText()
-        column_text = Gtk.TreeViewColumn("Installed", renderer_text, text=2)
+        column_text = Gtk.TreeViewColumn("Summary", renderer_text, text=2)
+        treeview.append_column(column_text)
+
+        renderer_text = Gtk.CellRendererText()
+        column_text = Gtk.TreeViewColumn("Installed", renderer_text, text=3)
         treeview.append_column(column_text)
 
         vbox.pack_start(treeview, False, True, 20)
@@ -68,7 +72,14 @@ class BottleWindow(Gtk.Window):
         self.liststore.clear()
 
         for r in rl:
+
+            if re.match(r".*-{}$".format(r.publisher), r.name):
+                icon = "system-users-symbolic"
+            else:
+                icon = "face-wink-symbolic"
+
             self.liststore.append([
+                icon,
                 r.name,
                 r.summary,
                 ("{} (rev {})".format(
