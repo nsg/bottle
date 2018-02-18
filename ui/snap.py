@@ -35,6 +35,8 @@ def update_result(sr):
 
     sr.summary = yd.get('summary', None)
     sr.description = yd.get('description', None)
+    if sr.description:
+        sr.description = sr.description.strip()
     sr.publisher = yd.get('publisher', None)
     sr.contact = yd.get('contact', None)
     sr.snap_id = yd.get('snap-id', None)
@@ -59,12 +61,15 @@ def update_result(sr):
 
     return sr
 
-def find(name):
+def find_cmd(name):
+    """ Return lines, remove header and trailing newline """
     p = subprocess.Popen(["snap", "find", name], stdout=subprocess.PIPE)
     r = p.communicate()
-    stdout = r[0].decode('utf-8')
+    return r[0].decode('utf-8').split("\n")[1:-1]
+
+def find(name):
     results = []
-    for line in stdout.split("\n")[1:-1]:
+    for line in find_cmd(name):
         name = line.split()[0]
         sr = SnapSearchResult(name)
         results.append(update_result(sr))
